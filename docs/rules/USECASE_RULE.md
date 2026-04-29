@@ -35,7 +35,7 @@ AI는 Application Layer(UseCase) 구현 시 아래 규칙을 반드시 준수해
 
 ### 4. Data Flow Rules
 
-- 입력은 DTO 또는 명확한 Input Model로 받는다
+- 계층 간 통신 원칙에 따라 입력은 반드시 DTO로 받는다
 - Domain Model을 생성/조회 후 작업을 수행한다
 
 - 외부 데이터(DB/API)는 반드시 Domain Model로 변환 후 사용한다
@@ -72,7 +72,8 @@ AI는 Application Layer(UseCase) 구현 시 아래 규칙을 반드시 준수해
 
 ### 8. Output Rules
 
-- UseCase는 Domain Model 또는 Output DTO를 반환한다
+- UseCase는 결과를 반드시 Output DTO로 변환하여 반환한다
+- Domain Model을 그대로 반환하는 것을 엄격히 금지한다
 - Response 형태로 직접 반환하지 않는다 (HTTP 개념 금지)
 
 ---
@@ -80,6 +81,7 @@ AI는 Application Layer(UseCase) 구현 시 아래 규칙을 반드시 준수해
 ### 9. Naming Rules
 
 - UseCase 이름은 반드시 동사 기반으로 작성한다
+- 파일명은 `[name].usecase.ts` 포맷을 사용한다. (예: `create-user.usecase.ts`)
 
 예:
 - CreateUserUseCase

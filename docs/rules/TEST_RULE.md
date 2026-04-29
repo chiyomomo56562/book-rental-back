@@ -6,8 +6,8 @@ AI는 테스트 코드 작성 시 아래 규칙을 반드시 준수해야 한다
 
 ### 1. Core Principle
 
+- **TDD (Test-Driven Development) 필수**: 핵심 비즈니스 로직(Domain, UseCase)을 개발할 때는 반드시 실제 구현 코드보다 테스트 코드를 먼저 작성하여 명세를 검증해야 한다
 - 테스트는 비즈니스 로직의 정확성과 아키텍처 규칙 준수를 검증해야 한다
-
 - 단순 구현 디테일이 아닌 “행동(Behavior)”을 검증한다
 
 ---
@@ -61,7 +61,10 @@ AI는 테스트 코드 작성 시 아래 규칙을 반드시 준수해야 한다
 
 ---
 
-### 7. Naming Rules
+### 7. Naming & Location Rules
+
+- **Location**: 테스트 파일은 별도의 폴더로 분리하지 않고, 테스트하려는 대상 파일과 **동일한 경로(같은 폴더)**에 위치시킨다
+- **File Naming**: 파일명은 대상 파일명에 `.spec.ts` (또는 `.test.ts`)를 붙여 사용한다 (예: `create-user.usecase.spec.ts`)
 
 - 테스트 이름은 “행동 기반”으로 작성한다
 

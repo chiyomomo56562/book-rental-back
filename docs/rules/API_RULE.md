@@ -20,7 +20,7 @@ AI는 API Layer 구현 시 아래 규칙을 반드시 준수해야 한다.
 
 - 모든 요청(Request)과 응답(Response)은 반드시 DTO로 정의한다
 - DTO 없이 raw object 사용 금지
-- DTO는 API Layer에만 위치해야 한다 (다른 Layer로 전파 금지)
+- 계층 간 데이터 통신(예: Controller ↔ UseCase) 시 반드시 DTO를 사용하여 결합도를 낮춘다
 
 - Request DTO와 Response DTO는 명확히 분리한다
 - Domain Model을 그대로 Response로 반환 금지
@@ -74,6 +74,36 @@ AI는 API Layer 구현 시 아래 규칙을 반드시 준수해야 한다.
 
 
 
-### standard response, request structure 추가 필요
+### 8. Standard Response Structure
 
-### naming rule 추가 필요
+모든 API 응답은 프론트엔드 규격과의 호환성을 유지하기 위해 아래의 표준 래퍼 형식을 따릅니다.
+
+```typescript
+export type ApiError = {
+  message: string;
+  code: string;
+  status: number;
+};
+
+export type ApiResponse<T> = {
+  status: number;
+  data: T | null;
+  error: ApiError | null;
+};
+```
+
+**응답 규칙:**
+- **status**: HTTP Status Code를 사용합니다.
+- **성공 (200~299)**: `error`는 반드시 `null`이어야 하며, `data`에 유효한 응답 페이로드가 포함되어야 합니다.
+- **실패 (400~599)**: `data`는 `null`이어야 하며, 공통 에러 핸들러를 통해 `error` 객체에 상세 정보(`message`, `code`, `status`)가 포함되어야 합니다.
+
+---
+
+### 9. Naming Rules
+
+- **Endpoint (URI)**: RESTful 원칙을 준수합니다.
+  - 리소스는 명사의 복수형을 사용하며, 단어 구분은 kebab-case를 사용합니다. (예: `POST /api/books`, `GET /api/rental-histories/:id`)
+- **Controller Method**: 수행하는 행위(동사)를 명확히 표현합니다.
+  - 예: `createBook()`, `getRentalHistoryById()`
+- **DTO Naming**: `[Action][Entity]RequestDto` 및 `[Action][Entity]ResponseDto` 형식을 사용합니다.
+  - 예: `CreateBookRequestDto`, `GetBookResponseDto`

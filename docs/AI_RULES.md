@@ -14,6 +14,8 @@ AI는 아래 사항을 절대 위반해서는 안 된다.
 
 - **No Shared Abuse:** shared 영역에 비즈니스 로직 작성 금지
 
+- **Strict DTO Communication:** 모든 계층 간 통신 시 원본 객체(Domain Model 등) 직접 전달을 금지하며, 반드시 전용 DTO를 통해 데이터를 주고받는다.
+
 ## 2. Quality & Implementation Rule
 
 - **Single Responsibility:** 모든 함수와 모듈은 하나의 책임만 가진다
