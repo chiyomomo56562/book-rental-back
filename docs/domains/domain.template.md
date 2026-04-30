@@ -3,7 +3,7 @@
 > **참고 규칙**: `docs/rules/DOMAIN_RULE.md`
 > **아키텍처 흐름**: `docs/PATTERN.md`
 
-이 문서는 Domain Layer의 **Entity(Model)**, **Value Object**, **Domain Service**, **Repository Interface**, **Domain Exception** 구현 시 사용하는 표준 템플릿입니다.
+이 문서는 Domain Layer의 **관계도**, **Entity(Model)**, **Value Object**, **Domain Service**, **Repository Interface**, **Domain Exception** 구현 시 사용하는 표준 템플릿입니다.
 
 ---
 
@@ -24,6 +24,32 @@ src/domain/
 └── types/
     └── transaction.type.ts        # 트랜잭션 추상화 타입
 ```
+
+---
+
+## 0. 도메인 모델 관계도 (Relationships)
+
+> **목적**: 도메인 간의 관계(1:1, 1:N, N:M)를 시각화하고 비즈니스적 의존 관계를 정의합니다. (물리적 테이블 관계와 매핑됨)
+
+### 📊 관계 다이어그램
+```mermaid
+erDiagram
+    [ENTITY_A] ||--o{ [ENTITY_B] : "관계를 설명하는 동사 (예: 소유한다)"
+    [ENTITY_A] {
+        string id PK "설명"
+        string field "설명"
+    }
+    [ENTITY_B] {
+        string id PK "설명"
+        string entityAId FK "외래키 설명"
+    }
+```
+
+### 📋 관계 상세 설명
+| 소스 도메인 | 타겟 도메인 | 관계 유형 | 설명 |
+|---|---|---|---|
+| `[EntityA]` | `[EntityB]` | `1:N` | `EntityA` 하나에 여러 `EntityB`가 존재함 |
+| `[EntityB]` | `[EntityA]` | `N:1` | `EntityB`는 반드시 하나의 `EntityA`에 속함 |
 
 ---
 

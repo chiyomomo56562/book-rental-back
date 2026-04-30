@@ -1,0 +1,2 @@
+description = "코드 리뷰 체크리스트를 실행합니다."
+prompt = "@{docs/commands/REVIEW.md}"

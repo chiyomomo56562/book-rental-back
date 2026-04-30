@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id        String          @id @default(uuid())
+  title     String
+  status    BookStatus      @default(AVAILABLE)
+  rentals   RentalHistory[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@map("books")
+}
+
+model RentalHistory {
+  id         String    @id @default(uuid())
+  book       Book      @relation(fields: [bookId], references: [id])
+  bookId     String
+  rentedAt   DateTime  @default(now())
+  returnedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("rental_histories")
+}
+
+enum BookStatus {
+  AVAILABLE
+  RENTED
+}

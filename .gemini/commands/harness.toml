@@ -1,0 +1,2 @@
+description = "Harness 워크플로우를 가이드합니다."
+prompt = "@{docs/commands/harness.md}"
