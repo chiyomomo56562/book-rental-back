@@ -1,6 +1,6 @@
-## API Rules
+## Presentation Rules
 
-AI는 API Layer 구현 시 아래 규칙을 반드시 준수해야 한다.
+AI는 Presentation Layer 구현 시 아래 규칙을 반드시 준수해야 한다.
 
 ---
 
@@ -47,7 +47,7 @@ AI는 API Layer 구현 시 아래 규칙을 반드시 준수해야 한다.
 
 ---
 
-### 5. Dependency Rules (API Layer)
+### 5. Dependency Rules (Presentation Layer)
 
 - Controller는 Application Layer(UseCase)만 의존할 수 있다
 - Domain, Infrastructure Layer 직접 접근 금지
@@ -72,11 +72,11 @@ AI는 API Layer 구현 시 아래 규칙을 반드시 준수해야 한다.
 - Domain 객체를 그대로 반환하는 코드 생성 금지
 - Request 객체를 그대로 UseCase로 전달 금지
 
-
+---
 
 ### 8. Standard Response Structure
 
-모든 API 응답은 프론트엔드 규격과의 호환성을 유지하기 위해 아래의 표준 래퍼 형식을 따릅니다.
+모든 응답은 프론트엔드 규격과의 호환성을 유지하기 위해 아래의 표준 래퍼 형식을 따릅니다.
 
 ```typescript
 export type ApiError = {
@@ -107,3 +107,4 @@ export type ApiResponse<T> = {
   - 예: `createBook()`, `getRentalHistoryById()`
 - **DTO Naming**: `[Action][Entity]RequestDto` 및 `[Action][Entity]ResponseDto` 형식을 사용합니다.
   - 예: `CreateBookRequestDto`, `GetBookResponseDto`
+- **Mapper Naming**: `Presentation[Entity]Mapper` 형식을 사용한다.

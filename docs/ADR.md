@@ -13,8 +13,8 @@
 
 ### Decision
 
-- 시스템을 Domain, Application, Infrastructure 계층으로 명확히 분리한다.
-- 모든 의존성은 내부(Domain)를 향해 단방향으로만 흐른다 (의존성 역전 원칙 적용).
+- 시스템을 Domain, Application, Infrastructure, Presentation 계층으로 명확히 분리한다.
+- 모든 의존성은 내부(Domain)를 향해 단방향으로 흐르거나, DIP를 통해 역전된다.
 - 핵심 비즈니스 로직은 어떠한 외부 기술에도 의존하지 않는 순수 객체 지향 영역인 Domain Layer에 격리한다.
 
 ---
@@ -48,7 +48,7 @@
 ### Decision
 
 - Application Layer는 Use Case 단위로 구성한다.
-- Controller는 외부 요청(HTTP 등)을 DTO로 변환하여 Use Case를 호출하는 역할만 수행하며, 어떠한 비즈니스 로직도 포함하지 않는다.
+- Presentation Layer (Controller)는 외부 요청(HTTP 등)을 DTO로 변환하여 Use Case를 호출하는 역할만 수행하며, 어떠한 비즈니스 로직도 포함하지 않는다.
 - Use Case는 단일 트랜잭션 경계를 가지며, Domain Layer를 조율하여 비즈니스 흐름을 오케스트레이션(Orchestration)한다.
 
 ---
@@ -81,8 +81,9 @@
 ### Decision
 
 - 계층 간 경계를 넘을 때는 해당 계층의 전용 모델(Request/Response DTO, Domain Model)로 데이터를 변환하여 결합도를 낮춘다.
-- Controller와 Application 계층 사이는 DTO를 사용한다.
-- Application과 Infrastructure 계층에서는 Domain Model을 사용하며, Infrastructure 계층의 Mapper를 통해 ORM Entity 등과 Domain Model을 변환한다.
+- Controller와 Application 계층 사이는 Command/Query DTO 및 Result DTO를 사용한다.
+- Application 계층 내부에서는 Domain Model을 생성하고 사용한다. 단, Infrastructure로부터 데이터를 조회할 때는 Infra DTO로 수신하며, Application Mapper가 이를 Domain Model로 변환한다.
+- **Repository(Infrastructure)는 어떠한 경우에도 Domain Model을 반환하지 않는다.** 반환값은 항상 Infra DTO이며, `save()` 경로에 한해서만 Domain Model을 인자로 받는 것이 허용된다.
 
 ---
 

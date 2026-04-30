@@ -36,8 +36,7 @@ AI는 Application Layer(UseCase) 구현 시 아래 규칙을 반드시 준수해
 ### 4. Data Flow Rules
 
 - 계층 간 통신 원칙에 따라 입력은 반드시 DTO로 받는다
-- Domain Model을 생성/조회 후 작업을 수행한다
-
+- **도메인 모델 생성**: Domain Model 생성은 Application Layer (UseCase 또는 연관된 Mapper) 내부에서만 수행한다. Presentation이나 Infrastructure에서 도메인 모델을 생성하여 전달하는 것을 금지한다.
 - 외부 데이터(DB/API)는 반드시 Domain Model로 변환 후 사용한다
 
 ---
@@ -55,8 +54,25 @@ AI는 Application Layer(UseCase) 구현 시 아래 규칙을 반드시 준수해
 
 - 트랜잭션은 UseCase 단위에서 관리한다
 - 하나의 UseCase는 하나의 트랜잭션 경계를 가진다
-
 - UseCase 내부에서 트랜잭션을 분산시키지 않는다
+
+**추상화된 트랜잭션 사용 예시:**
+```typescript
+async execute(command: RentBookCommand): Promise<RentBookResultDto> {
+  // UseCase는 추상화된 UnitOfWork를 주입받아 트랜잭션 경계를 관리한다.
+  return await this.unitOfWork.runInTransaction(async (tx: TransactionContext) => {
+    // 1. Repository에 추상화된 트랜잭션 컨텍스트(tx)를 전달하여 작업 수행
+    const bookInfraDto = await this.bookRepository.findById(command.bookId, tx);
+    
+    // ... 비즈니스 로직 수행 ...
+    
+    // 2. 저장 작업도 동일한 트랜잭션 컨텍스트 내에서 도메인 객체를 직접 전달
+    await this.bookRepository.save(book, tx);
+    
+    return resultDto;
+  });
+}
+```
 
 ---
 
@@ -72,8 +88,9 @@ AI는 Application Layer(UseCase) 구현 시 아래 규칙을 반드시 준수해
 
 ### 8. Output Rules
 
-- UseCase는 결과를 반드시 Output DTO로 변환하여 반환한다
-- Domain Model을 그대로 반환하는 것을 엄격히 금지한다
+- UseCase는 결과를 반드시 Output DTO로 변환하여 반환한다.
+- **도메인 모델 노출 금지**: Domain Model을 그대로 반환하는 것을 엄격히 금지한다.
+- **저장소 반환값 처리**: Repository는 도메인 모델을 반환하지 않으므로, Repository의 반환값(Infra DTO)을 반드시 도메인 모델로 변환한 후 다시 Result DTO로 변환하여 반환한다.
 - Response 형태로 직접 반환하지 않는다 (HTTP 개념 금지)
 
 ---

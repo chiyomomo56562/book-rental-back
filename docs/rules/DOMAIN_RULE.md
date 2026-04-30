@@ -114,5 +114,5 @@ AI는 Domain Layer 구현 시 아래 규칙을 반드시 준수해야 한다.
 
 - **Entity**: 클래스명은 명사로, 파일명은 `[name].entity.ts`를 사용한다. (예: `Book`, `book.entity.ts`)
 - **Value Object**: 파일명은 `[name].vo.ts`를 사용한다. (예: `money.vo.ts`)
-- **Domain Service**: 파일명은 `[name].domain-service.ts` 또는 `[name].service.ts`를 사용한다.
+- **Domain Service**: 파일명은 `[name].domain-service.ts`를 사용한다. (예: `rental.domain-service.ts`)
 - **Exception**: 파일명은 `[name].exception.ts`를 사용하며, 클래스명은 `[Name]DomainException` 형태를 띤다.

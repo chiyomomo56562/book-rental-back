@@ -1,3 +1,7 @@
+# AI Agent Global Rules
+
+이 문서는 모든 기술적 결정 및 구현 규칙(`docs/rules/*.md`)에 우선하는 **전역 강제 규정**입니다. AI 에이전트는 작업을 시작하기 전 이 규칙을 반드시 숙지해야 합니다.
+
 ## 1. Global Strict Constraints
 
 AI는 아래 사항을 절대 위반해서는 안 된다.
@@ -14,7 +18,17 @@ AI는 아래 사항을 절대 위반해서는 안 된다.
 
 - **No Shared Abuse:** shared 영역에 비즈니스 로직 작성 금지
 
-- **Strict DTO Communication:** 모든 계층 간 통신 시 원본 객체(Domain Model 등) 직접 전달을 금지하며, 반드시 전용 DTO를 통해 데이터를 주고받는다.
+- **Strict DTO Communication**: 모든 계층 간 통신 시 반드시 전용 DTO를 사용한다. **단, `save()` 경로에 한해 Domain Model을 Infrastructure로 전달하는 것만 예외적으로 허용한다.**
+  - Repository는 절대 Domain Model을 반환하지 않는다. (항상 Infra DTO 반환)
+  - Controller 레이어는 어떠한 경우에도 Domain Model을 직접 다루거나 생성할 수 없다.
+
+- **Domain Model Lifecycle**: Domain Model 생성은 오직 Application Layer (UseCase/Mapper) 내부에서만 허용된다.
+
+- **Transaction Integrity**: `tx`가 제공된 경우 반드시 사용해야 하며, 암묵적 fallback은 절대 금지한다.
+
+- **Infrastructure Boundary**: `Domain -> Entity` 변환 로직은 오직 Repository `save()` 내부에서만 수행한다.
+
+---
 
 ## 2. Quality & Implementation Rule
 
@@ -27,3 +41,11 @@ AI는 아래 사항을 절대 위반해서는 안 된다.
 - **Pure Logic Preference:** 가능한 한 순수 함수 형태로 작성한다
 
 - **Testable Code:** 외부 의존성과 분리된 테스트 가능한 구조로 작성한다
+
+---
+
+## 3. Workflow & Review Rules
+
+- **Decision Documentation**: 아키텍처 결정(계층 분리, 데이터 흐름 정책 등)을 변경하는 경우, 반드시 `docs/ADR.md`에 새로운 ADR 항목을 추가하고 **변경 사유(Context), 결정 내용(Decision), 제약 조건(Constraints), 결과(Consequences)**를 기록해야 한다.
+
+- **Rule Update Notification**: `docs/rules/*.md` 파일을 수정하는 경우, 해당 변경이 다른 규칙 문서나 `PATTERN.md`와 충돌하지 않는지 반드시 교차 검토 후 반영한다.
